@@ -1,0 +1,146 @@
+body {
+    background-color: #121212; /* темный фон */
+}
+
+.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #121212; /* Темный фон для всей страницы */
+    color: #e0e0e0; /* Светлый цвет текста */
+}
+
+
+main {
+    flex: 1;
+    background-color: #1c1c1c; /* Дополнительный фон для основного пространства */
+}
+
+.sidebar {
+    background-image: linear-gradient(180deg, #091833 0%, #000000 70%);
+    color: #d4d4d4; /* Цвет шрифта для сайдбара */
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.5); /* Добавляем тень для объемного эффекта */
+}
+
+.top-row {
+    background-color: #212121; /* Темный фон для верхней панели */
+    border-bottom: 1px solid #383838;
+    justify-content: flex-end;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5); /* Легкая тень для отделения */
+}
+
+    .top-row ::deep a, .top-row ::deep .btn-link {
+        color: #b3b3b3; /* Серый текст для кнопок/ссылок */
+        white-space: nowrap;
+        margin-left: 1.5rem;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
+            color: #ffffff; /* Белый цвет при наведении */
+            text-decoration: underline;
+        }
+
+        .top-row ::deep a:first-child {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+@media (max-width: 640.98px) {
+    .top-row {
+        justify-content: space-between;
+    }
+
+        .top-row ::deep a, .top-row ::deep .btn-link {
+            margin-left: 0;
+        }
+}
+
+@media (min-width: 641px) {
+    .page {
+        flex-direction: row;
+    }
+
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+    }
+
+    .top-row {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+        .top-row.auth ::deep a:first-child {
+            flex: 1;
+            text-align: right;
+            width: 0;
+        }
+
+    .top-row, article {
+        padding-left: 2rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+#blazor-error-ui {
+    background: #2e2e2e; /* Темный фон для сообщения об ошибке */
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.5);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    color: #ffcccc; /* Легкий красный оттенок текста ошибок */
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+        color: #ff8080; /* Красный для кнопки закрытия ошибки */
+    }
+
+.custom-toggler .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(102, 193, 255, 0.7)' stroke-width='1' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
+.custom-toggler.navbar-toggler {
+    border-color: rgba(102, 193, 255, 0.8); /* Голубая рамка для кнопки */
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:active,
+.navbar-toggler-icon:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.sidebar {
+    transition: display 0.3s ease, background-color 0.3s ease;
+}
+
+.menu-toggle {
+    margin-right: 20px;
+    padding: 5px 10px;
+    background-color: #444; /* Темная кнопка */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .menu-toggle:hover {
+        background-color: #666; /* Посветлее при наведении */
+    }

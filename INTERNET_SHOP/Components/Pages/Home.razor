@@ -1,0 +1,78 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+@using INTERNET_SHOP.Models
+@using Microsoft.EntityFrameworkCore
+@using System.Net.NetworkInformation
+@using System.Net.Sockets
+@using System.Management
+@inject IDbContextFactory<INTERNET_SHOP.Data.INTERNET_SHOPContext> Db
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        string pcName = Environment.UserName;
+
+        using var context = Db.CreateDbContext();
+
+        if(await context.User.FirstOrDefaultAsync(u => u.PcName == pcName) is null)
+        {
+            string os = Environment.OSVersion.ToString();
+            string ipAdress = "";
+            string manufacturer = "";
+            string externalIp = await GetExternalIpAddressAsync();
+
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("select * from Win32_Processor"))
+            {
+                foreach (ManagementObject obj in searcher.Get())
+                {
+                    manufacturer = obj["Manufacturer"].ToString() ?? "";
+                }
+            }
+
+            NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface ni in interfaces)
+            {
+                IPInterfaceProperties properties = ni.GetIPProperties();
+                foreach (UnicastIPAddressInformation ip in properties.UnicastAddresses)
+                {
+                    if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        ipAdress = ip.Address.ToString();
+                    }
+                }
+            }
+
+            context.User.Add(new User
+            {
+                PcName = pcName,
+                OS = os,
+                IP = ipAdress,
+                ManufacturerProcessor = manufacturer,
+                ExternalIp = externalIp
+            });
+            await context.SaveChangesAsync();
+        }
+    }
+
+    public async Task<string> GetExternalIpAddressAsync()
+    {
+        using HttpClient client = new HttpClient();
+        try
+        {
+            var response = await client.GetStringAsync("https://api.ipify.org");
+            return response;
+        }
+        catch
+        {
+            return "";
+        }
+    }
+}
