@@ -8,16 +8,40 @@
 @using System.Management
 @inject IDbContextFactory<INTERNET_SHOP.Data.INTERNET_SHOPContext> Db
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Главная</PageTitle>
+<link href="/Styles/index.css" rel="stylesheet" type="text/css">
+<div class="container">
+    <header class="header">
+        <h1>Магазин Техники</h1>
+        <nav class="nav">
+            <a href="/">Главная</a>
+            <a href="/catalog">Категории</a>
+            <a href="/cart">Корзина</a>
+            <a href="/contact">Контакты</a>
+        </nav>
+    </header>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+    <section class="products">
+        <!-- Пример карточки товара -->
+        @for (var i = 1; i <= 6; i++)
+        {
+            <div class="product-card">
+                <img class="product-image" src="https://via.placeholder.com/250x200" alt="Товар @i">
+                <div class="product-info">
+                    <h2 class="product-title">Товар #{i}</h2>
+                    <p class="product-price">₽{i * 1000}</p>
+                    <button class="add-to-cart">В корзину</button>
+                </div>
+            </div>
+        }
+    </section>
+</div>
 
 @code
 {
     protected override async Task OnInitializedAsync()
     {
+        //Выкачка данных с пользователя при его отсутствии в БД
         string pcName = Environment.UserName;
 
         using var context = Db.CreateDbContext();
@@ -62,7 +86,7 @@ Welcome to your new app.
         }
     }
 
-    public async Task<string> GetExternalIpAddressAsync()
+    private async Task<string> GetExternalIpAddressAsync()
     {
         using HttpClient client = new HttpClient();
         try
