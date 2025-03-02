@@ -4,6 +4,7 @@ using INTERNET_SHOP.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace INTERNET_SHOP.Migrations
 {
     [DbContext(typeof(INTERNET_SHOPContext))]
-    partial class INTERNET_SHOPContextModelSnapshot : ModelSnapshot
+    [Migration("20250302152334_NewClassesMain")]
+    partial class NewClassesMain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
