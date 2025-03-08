@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace INTERNET_SHOP.Migrations
 {
     [DbContext(typeof(INTERNET_SHOPContext))]
-    [Migration("20250302152334_NewClassesMain")]
-    partial class NewClassesMain
+    [Migration("20250308220934_BdMigr1")]
+    partial class BdMigr1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,9 @@ namespace INTERNET_SHOP.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CityId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -51,6 +54,8 @@ namespace INTERNET_SHOP.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
+
+                    b.HasIndex("CityId1");
 
                     b.ToTable("Cinema");
                 });
@@ -72,6 +77,33 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("City");
                 });
 
+            modelBuilder.Entity("INTERNET_SHOP.Models.Hall", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CinemaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberSeats")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("VIP")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CinemaId");
+
+                    b.ToTable("Hall");
+                });
+
             modelBuilder.Entity("INTERNET_SHOP.Models.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -89,6 +121,25 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("Order");
                 });
 
+            modelBuilder.Entity("INTERNET_SHOP.Models.Position", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberRow")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Position");
+                });
+
             modelBuilder.Entity("INTERNET_SHOP.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -96,6 +147,9 @@ namespace INTERNET_SHOP.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CinemaId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -107,14 +161,54 @@ namespace INTERNET_SHOP.Migrations
                     b.Property<string>("PathImage")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<TimeOnly>("TimeRun")
+                        .HasColumnType("time");
+
                     b.Property<int>("TypeProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CinemaId");
+
                     b.HasIndex("TypeProductId");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("INTERNET_SHOP.Models.Schedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CountTickets")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("DateEvent")
+                        .HasColumnType("date");
+
+                    b.Property<int>("HallId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("TimeEndEvent")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("TimeStartEvent")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HallId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Schedule");
                 });
 
             modelBuilder.Entity("INTERNET_SHOP.Models.Ticket", b =>
@@ -125,7 +219,7 @@ namespace INTERNET_SHOP.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CityId")
+                    b.Property<int?>("CityId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -139,6 +233,18 @@ namespace INTERNET_SHOP.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PositionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScheduleId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ScheduleId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -149,6 +255,14 @@ namespace INTERNET_SHOP.Migrations
 
                     b.HasIndex("OrderId")
                         .IsUnique();
+
+                    b.HasIndex("PositionId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ScheduleId");
+
+                    b.HasIndex("ScheduleId1");
 
                     b.ToTable("Ticket");
                 });
@@ -205,32 +319,72 @@ namespace INTERNET_SHOP.Migrations
             modelBuilder.Entity("INTERNET_SHOP.Models.Cinema", b =>
                 {
                     b.HasOne("INTERNET_SHOP.Models.City", "City")
-                        .WithMany("Cinemas")
+                        .WithMany()
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("INTERNET_SHOP.Models.City", null)
+                        .WithMany("Cinemas")
+                        .HasForeignKey("CityId1");
 
                     b.Navigation("City");
                 });
 
+            modelBuilder.Entity("INTERNET_SHOP.Models.Hall", b =>
+                {
+                    b.HasOne("INTERNET_SHOP.Models.Cinema", "Cinema")
+                        .WithMany("Halls")
+                        .HasForeignKey("CinemaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cinema");
+                });
+
             modelBuilder.Entity("INTERNET_SHOP.Models.Product", b =>
                 {
+                    b.HasOne("INTERNET_SHOP.Models.Cinema", "Cinema")
+                        .WithMany("Products")
+                        .HasForeignKey("CinemaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("INTERNET_SHOP.Models.TypeProduct", "TypeProduct")
                         .WithMany("Products")
                         .HasForeignKey("TypeProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Cinema");
+
                     b.Navigation("TypeProduct");
+                });
+
+            modelBuilder.Entity("INTERNET_SHOP.Models.Schedule", b =>
+                {
+                    b.HasOne("INTERNET_SHOP.Models.Hall", "Hall")
+                        .WithMany()
+                        .HasForeignKey("HallId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("INTERNET_SHOP.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hall");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("INTERNET_SHOP.Models.Ticket", b =>
                 {
-                    b.HasOne("INTERNET_SHOP.Models.City", "City")
+                    b.HasOne("INTERNET_SHOP.Models.City", null)
                         .WithMany("Tickets")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CityId");
 
                     b.HasOne("INTERNET_SHOP.Models.Order", "Order")
                         .WithOne("Ticket")
@@ -238,9 +392,42 @@ namespace INTERNET_SHOP.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("City");
+                    b.HasOne("INTERNET_SHOP.Models.Position", "Position")
+                        .WithMany()
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("INTERNET_SHOP.Models.Product", "Product")
+                        .WithMany("Tickets")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("INTERNET_SHOP.Models.Schedule", "Schedule")
+                        .WithMany()
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("INTERNET_SHOP.Models.Schedule", null)
+                        .WithMany("Tickets")
+                        .HasForeignKey("ScheduleId1");
 
                     b.Navigation("Order");
+
+                    b.Navigation("Position");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Schedule");
+                });
+
+            modelBuilder.Entity("INTERNET_SHOP.Models.Cinema", b =>
+                {
+                    b.Navigation("Halls");
+
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("INTERNET_SHOP.Models.City", b =>
@@ -254,6 +441,16 @@ namespace INTERNET_SHOP.Migrations
                 {
                     b.Navigation("Ticket")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("INTERNET_SHOP.Models.Product", b =>
+                {
+                    b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("INTERNET_SHOP.Models.Schedule", b =>
+                {
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("INTERNET_SHOP.Models.TypeProduct", b =>
