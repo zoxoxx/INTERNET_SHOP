@@ -1,4 +1,4 @@
-﻿namespace INTERNET_SHOP.Models
+﻿namespace INTERNET_SHOP.Models.Entities
 {
     public class User
     {

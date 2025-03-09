@@ -1,6 +1,6 @@
 ﻿using Microsoft.Identity.Client;
 
-namespace INTERNET_SHOP.Models
+namespace INTERNET_SHOP.Models.Entities
 {
     public class Ticket
     {
@@ -21,5 +21,8 @@ namespace INTERNET_SHOP.Models
         //Связь с расписанием
         public int ScheduleId { get; set; }
         public Schedule Schedule { get; set; }
+        //Пользователь который купил
+        public int UserAutorizeId { get; set; }
+        public UserAutorize User { get; set; }
     }
 }

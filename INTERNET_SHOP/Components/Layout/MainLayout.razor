@@ -12,6 +12,15 @@
     <main>
         <div class="top-row px-4">
             <button class="menu-toggle" onclick="toggleSidebar()">Скрыть меню</button>
+
+            <AuthorizeView>
+                <NotAuthorized>
+                    <a href="/login">Вход</a>
+                </NotAuthorized>
+                <Authorized>
+                    <a href="/logout">Выход</a>
+                </Authorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">

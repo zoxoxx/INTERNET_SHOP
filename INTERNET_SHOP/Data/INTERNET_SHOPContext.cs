@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using INTERNET_SHOP.Models;
+using INTERNET_SHOP.Models.Entities;
 
 namespace INTERNET_SHOP.Data
 {
@@ -36,7 +36,7 @@ namespace INTERNET_SHOP.Data
 
         }
 
-        public DbSet<INTERNET_SHOP.Models.User> User { get; set; } = default!;
+        public DbSet<User> User { get; set; } = default!;
         public DbSet<TypeProduct> TypeProducts { get; set; } = default!;
         public DbSet<Product> Product { get; set; } = default!;
         public DbSet<Cinema> Cinema { get; set; } = default!;
@@ -46,6 +46,8 @@ namespace INTERNET_SHOP.Data
         public DbSet<Position> Position { get; set; } = default!;
         public DbSet<Hall> Hall { get; set; } = default!;
         public DbSet<Schedule> Schedule { get; set; } = default!;
+        public DbSet<UserAutorize> UserAutorize { get; set; } = default!;
+        public DbSet<Role> Role { get; set; } = default!;
 
     }
 }
