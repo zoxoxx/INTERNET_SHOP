@@ -1,0 +1,24 @@
+﻿.error-page-container {
+    text-align: center;
+    margin: 50px;
+}
+
+.loading-text {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    animation: alternate-fade 2s infinite;
+    animation-timing-function: steps(2, start);
+}
+
+.loading-text {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    animation: fadeIn 2s forwards;
+    animation-delay: 2s;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}

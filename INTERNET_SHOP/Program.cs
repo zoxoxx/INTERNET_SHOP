@@ -8,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContextFactory<INTERNET_SHOPContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("INTERNET_SHOPContext") ?? throw new InvalidOperationException("Connection string 'INTERNET_SHOPContext' not found.")));
 
-
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -53,8 +52,6 @@ app.UseAntiforgery();
 //Authentication and Authorization
 app.UseAuthentication();
 app.UseAuthorization();
-
-
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
