@@ -16,8 +16,5 @@
         public TypeProduct? TypeProduct { get; set; }
         //Связь с билетом
         public List<Ticket> Tickets { get; set; } = new();
-        //Связь с кинотеатром
-        public int CinemaId { get; set; }
-        public Cinema Cinema { get; set; }
     }
 }

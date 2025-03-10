@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace INTERNET_SHOP.Migrations
 {
     /// <inheritdoc />
-    public partial class BdMigr1 : Migration
+    public partial class DbMigr1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -44,11 +44,26 @@ namespace INTERNET_SHOP.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<int>(type: "int", nullable: false),
-                    NumberRow = table.Column<int>(type: "int", nullable: false)
+                    NumberRow = table.Column<int>(type: "int", nullable: false),
+                    PriceCoefficient = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Position", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Role",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Role", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -111,6 +126,54 @@ namespace INTERNET_SHOP.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserAutorize",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Lastname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Patronymic = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Login = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAutorize", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserAutorize_Role_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Role",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Product",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PathImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TimeRun = table.Column<TimeOnly>(type: "time", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    TypeProductId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Product_TypeProducts_TypeProductId",
+                        column: x => x.TypeProductId,
+                        principalTable: "TypeProducts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Hall",
                 columns: table => new
                 {
@@ -133,31 +196,21 @@ namespace INTERNET_SHOP.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Product",
+                name: "Afisha",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PathImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TimeRun = table.Column<TimeOnly>(type: "time", nullable: false),
-                    TypeProductId = table.Column<int>(type: "int", nullable: false),
-                    CinemaId = table.Column<int>(type: "int", nullable: false)
+                    InputCategory = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.PrimaryKey("PK_Afisha", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Product_Cinema_CinemaId",
-                        column: x => x.CinemaId,
-                        principalTable: "Cinema",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Product_TypeProducts_TypeProductId",
-                        column: x => x.TypeProductId,
-                        principalTable: "TypeProducts",
+                        name: "FK_Afisha_Product_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Product",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -173,11 +226,18 @@ namespace INTERNET_SHOP.Migrations
                     TimeEndEvent = table.Column<TimeOnly>(type: "time", nullable: false),
                     CountTickets = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
+                    AfishaId = table.Column<int>(type: "int", nullable: false),
                     HallId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Schedule", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Schedule_Afisha_AfishaId",
+                        column: x => x.AfishaId,
+                        principalTable: "Afisha",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Schedule_Hall_HallId",
                         column: x => x.HallId,
@@ -189,7 +249,7 @@ namespace INTERNET_SHOP.Migrations
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -205,6 +265,7 @@ namespace INTERNET_SHOP.Migrations
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     PositionId = table.Column<int>(type: "int", nullable: false),
                     ScheduleId = table.Column<int>(type: "int", nullable: false),
+                    UserAutorizeId = table.Column<int>(type: "int", nullable: false),
                     CityId = table.Column<int>(type: "int", nullable: true),
                     ScheduleId1 = table.Column<int>(type: "int", nullable: true)
                 },
@@ -245,7 +306,18 @@ namespace INTERNET_SHOP.Migrations
                         column: x => x.ScheduleId1,
                         principalTable: "Schedule",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Ticket_UserAutorize_UserAutorizeId",
+                        column: x => x.UserAutorizeId,
+                        principalTable: "UserAutorize",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Afisha_ProductId",
+                table: "Afisha",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cinema_CityId",
@@ -263,14 +335,14 @@ namespace INTERNET_SHOP.Migrations
                 column: "CinemaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_CinemaId",
-                table: "Product",
-                column: "CinemaId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Product_TypeProductId",
                 table: "Product",
                 column: "TypeProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Schedule_AfishaId",
+                table: "Schedule",
+                column: "AfishaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedule_HallId",
@@ -312,6 +384,16 @@ namespace INTERNET_SHOP.Migrations
                 name: "IX_Ticket_ScheduleId1",
                 table: "Ticket",
                 column: "ScheduleId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ticket_UserAutorizeId",
+                table: "Ticket",
+                column: "UserAutorizeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAutorize_RoleId",
+                table: "UserAutorize",
+                column: "RoleId");
         }
 
         /// <inheritdoc />
@@ -333,7 +415,16 @@ namespace INTERNET_SHOP.Migrations
                 name: "Schedule");
 
             migrationBuilder.DropTable(
+                name: "UserAutorize");
+
+            migrationBuilder.DropTable(
+                name: "Afisha");
+
+            migrationBuilder.DropTable(
                 name: "Hall");
+
+            migrationBuilder.DropTable(
+                name: "Role");
 
             migrationBuilder.DropTable(
                 name: "Product");

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace INTERNET_SHOP.Migrations
 {
     [DbContext(typeof(INTERNET_SHOPContext))]
-    [Migration("20250309111525_BdMigr2")]
-    partial class BdMigr2
+    [Migration("20250310194326_DbMigr1")]
+    partial class DbMigr1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,29 @@ namespace INTERNET_SHOP.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Cinema", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Afisha", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("InputCategory")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Afisha");
+                });
+
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Cinema", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +82,7 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("Cinema");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.City", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,7 +99,7 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("City");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Hall", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Hall", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -104,7 +126,7 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("Hall");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Order", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -121,7 +143,7 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("Order");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Position", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Position", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -135,21 +157,21 @@ namespace INTERNET_SHOP.Migrations
                     b.Property<int>("NumberRow")
                         .HasColumnType("int");
 
+                    b.Property<double>("PriceCoefficient")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.ToTable("Position");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Product", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CinemaId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -161,6 +183,9 @@ namespace INTERNET_SHOP.Migrations
                     b.Property<string>("PathImage")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
                     b.Property<TimeOnly>("TimeRun")
                         .HasColumnType("time");
 
@@ -169,14 +194,12 @@ namespace INTERNET_SHOP.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CinemaId");
-
                     b.HasIndex("TypeProductId");
 
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Role", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -198,13 +221,16 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Schedule", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Schedule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AfishaId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CountTickets")
                         .HasColumnType("int");
@@ -226,6 +252,8 @@ namespace INTERNET_SHOP.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AfishaId");
+
                     b.HasIndex("HallId");
 
                     b.HasIndex("ProductId");
@@ -233,7 +261,7 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("Schedule");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Ticket", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Ticket", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -294,7 +322,7 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("Ticket");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.TypeProduct", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.TypeProduct", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -315,7 +343,7 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("TypeProducts");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.User", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -343,7 +371,7 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.UserAutorize", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.UserAutorize", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -383,24 +411,35 @@ namespace INTERNET_SHOP.Migrations
                     b.ToTable("UserAutorize");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Cinema", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Afisha", b =>
                 {
-                    b.HasOne("INTERNET_SHOP.Models.City", "City")
+                    b.HasOne("INTERNET_SHOP.Models.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Cinema", b =>
+                {
+                    b.HasOne("INTERNET_SHOP.Models.Entities.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("INTERNET_SHOP.Models.City", null)
+                    b.HasOne("INTERNET_SHOP.Models.Entities.City", null)
                         .WithMany("Cinemas")
                         .HasForeignKey("CityId1");
 
                     b.Navigation("City");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Hall", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Hall", b =>
                 {
-                    b.HasOne("INTERNET_SHOP.Models.Cinema", "Cinema")
+                    b.HasOne("INTERNET_SHOP.Models.Entities.Cinema", "Cinema")
                         .WithMany("Halls")
                         .HasForeignKey("CinemaId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -409,79 +448,79 @@ namespace INTERNET_SHOP.Migrations
                     b.Navigation("Cinema");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Product", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Product", b =>
                 {
-                    b.HasOne("INTERNET_SHOP.Models.Cinema", "Cinema")
-                        .WithMany("Products")
-                        .HasForeignKey("CinemaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("INTERNET_SHOP.Models.TypeProduct", "TypeProduct")
+                    b.HasOne("INTERNET_SHOP.Models.Entities.TypeProduct", "TypeProduct")
                         .WithMany("Products")
                         .HasForeignKey("TypeProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Cinema");
-
                     b.Navigation("TypeProduct");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Schedule", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Schedule", b =>
                 {
-                    b.HasOne("INTERNET_SHOP.Models.Hall", "Hall")
+                    b.HasOne("INTERNET_SHOP.Models.Entities.Afisha", "Afisha")
+                        .WithMany("Schedules")
+                        .HasForeignKey("AfishaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("INTERNET_SHOP.Models.Entities.Hall", "Hall")
                         .WithMany()
                         .HasForeignKey("HallId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("INTERNET_SHOP.Models.Product", "Product")
+                    b.HasOne("INTERNET_SHOP.Models.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Afisha");
 
                     b.Navigation("Hall");
 
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Ticket", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Ticket", b =>
                 {
-                    b.HasOne("INTERNET_SHOP.Models.City", null)
+                    b.HasOne("INTERNET_SHOP.Models.Entities.City", null)
                         .WithMany("Tickets")
                         .HasForeignKey("CityId");
 
-                    b.HasOne("INTERNET_SHOP.Models.Order", "Order")
+                    b.HasOne("INTERNET_SHOP.Models.Entities.Order", "Order")
                         .WithOne("Ticket")
-                        .HasForeignKey("INTERNET_SHOP.Models.Ticket", "OrderId")
+                        .HasForeignKey("INTERNET_SHOP.Models.Entities.Ticket", "OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("INTERNET_SHOP.Models.Position", "Position")
+                    b.HasOne("INTERNET_SHOP.Models.Entities.Position", "Position")
                         .WithMany()
                         .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("INTERNET_SHOP.Models.Product", "Product")
+                    b.HasOne("INTERNET_SHOP.Models.Entities.Product", "Product")
                         .WithMany("Tickets")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("INTERNET_SHOP.Models.Schedule", "Schedule")
+                    b.HasOne("INTERNET_SHOP.Models.Entities.Schedule", "Schedule")
                         .WithMany()
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("INTERNET_SHOP.Models.Schedule", null)
+                    b.HasOne("INTERNET_SHOP.Models.Entities.Schedule", null)
                         .WithMany("Tickets")
                         .HasForeignKey("ScheduleId1");
 
-                    b.HasOne("INTERNET_SHOP.Models.UserAutorize", "User")
+                    b.HasOne("INTERNET_SHOP.Models.Entities.UserAutorize", "User")
                         .WithMany("Tickets")
                         .HasForeignKey("UserAutorizeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -498,9 +537,9 @@ namespace INTERNET_SHOP.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.UserAutorize", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.UserAutorize", b =>
                 {
-                    b.HasOne("INTERNET_SHOP.Models.Role", "Role")
+                    b.HasOne("INTERNET_SHOP.Models.Entities.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -509,47 +548,50 @@ namespace INTERNET_SHOP.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Cinema", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Afisha", b =>
                 {
-                    b.Navigation("Halls");
-
-                    b.Navigation("Products");
+                    b.Navigation("Schedules");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.City", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Cinema", b =>
+                {
+                    b.Navigation("Halls");
+                });
+
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.City", b =>
                 {
                     b.Navigation("Cinemas");
 
                     b.Navigation("Tickets");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Order", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Order", b =>
                 {
                     b.Navigation("Ticket")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Product", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Product", b =>
                 {
                     b.Navigation("Tickets");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Role", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Role", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.Schedule", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.Schedule", b =>
                 {
                     b.Navigation("Tickets");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.TypeProduct", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.TypeProduct", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("INTERNET_SHOP.Models.UserAutorize", b =>
+            modelBuilder.Entity("INTERNET_SHOP.Models.Entities.UserAutorize", b =>
                 {
                     b.Navigation("Tickets");
                 });

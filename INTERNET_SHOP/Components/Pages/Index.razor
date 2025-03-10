@@ -7,13 +7,15 @@
 @using System.Net.NetworkInformation
 @using System.Net.Sockets
 @using System.Management
+
 @inject IDbContextFactory<INTERNET_SHOP.Data.INTERNET_SHOPContext> Db
+@inject NavigationManager navigationManager
 
 <PageTitle>Афиша</PageTitle>
 <link href="/Styles/index.css" rel="stylesheet" type="text/css">
 <div class="container">
     <header class="header">
-        <h1>Магазин Техники</h1>
+        <h1>Афиша</h1>
         <nav class="nav">
             <a href="/">Афиша</a>
             <a href="/catalog">Категории</a>
@@ -22,29 +24,42 @@
         </nav>
     </header>
 
-    <section class="products">
-        <!-- Пример карточки товара -->
-        @for (var i = 1; i <= 6; i++)
-        {
-            <div class="product-card">
-                <img class="product-image" src="https://via.placeholder.com/250x200" alt="Товар @i">
-                <div class="product-info">
-                    <h2 class="product-title">Товар #{i}</h2>
-                    <p class="product-price">₽{i * 1000}</p>
-                    <button class="add-to-cart">В корзину</button>
+    @if(movies.Count > 0)
+    {
+        <section class="products">
+            <!-- Пример карточки товара -->
+            @for (var i = 1; i <= movies.Count; i++)
+            {
+                <div class="product-card">
+                    <img class="product-image" src="https://via.placeholder.com/250x200" alt="Товар @i">
+                    <div class="product-info">
+                        <h2 class="product-title">Товар #{@movies[i].Product.Name.ToString()}</h2>
+                        <p class="product-price">₽{@movies[i].Product.Price}</p>
+                        <button class="add-to-cart" onclick="@AboutButtonClick(movies[i])">Ознакомиться</button>
+                    </div>
                 </div>
-            </div>
-        }
-    </section>
+            }
+        </section>
+    }
+    else
+    {
+        <div style="color: #fff; text-align: center; padding: 50px 0;">
+            <h1>К сожалению, сеансов нет</h1>
+            <p>Следите за обновлениями и возвращайтесь позже!</p>
+        </div>
+    }
 </div>
 
 @code
 {
+    List<Afisha> movies { get; set; } = new();
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             await UserEntered();
+            await LoadProducts();
         }
         catch
         {
@@ -56,7 +71,6 @@
     {
         //Выкачка данных с пользователя при его отсутствии в БД
         string pcName = Environment.UserName;
-
         using var context = Db.CreateDbContext();
 
         if (await context.User.FirstOrDefaultAsync(u => u.PcName == pcName) is null)
@@ -111,5 +125,28 @@
         {
             return "";
         }
+    }
+
+    private async Task LoadProducts()
+    {
+        TimeOnly timeNow = TimeOnly.FromDateTime(DateTime.Now);
+        DateOnly dateNow = DateOnly.FromDateTime(DateTime.Now);
+
+        using var context = Db.CreateDbContext();
+        movies = await context.Afisha
+            .Join(context.Schedule,
+            a => a.Id,
+            s => s.AfishaId,
+            (af, sc) => new {af, sc})
+            .Where( s => s.sc.DateEvent >= dateNow && s.sc.TimeEndEvent > timeNow)
+            .Select( s => s.af)
+            .Take(15)
+            .Distinct()
+            .ToListAsync();
+    }
+
+    private async Task AboutButtonClick(Afisha afisha)
+    {
+        
     }
 }

@@ -11,8 +11,6 @@
         public int CityId { get; set; }
         public City City { get; set; }
 
-        //Связь с продуктом
-        public List<Product> Products { get; set; } = new();
         //Связь с залами
         public List<Hall> Halls { get; set; } = new();
     }

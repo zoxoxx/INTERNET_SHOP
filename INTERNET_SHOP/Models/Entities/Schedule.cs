@@ -10,6 +10,9 @@
         //Продукт
         public int ProductId { get; set; }
         public Product Product { get; set; }
+        //Связь с афишей к которой относится фильм
+        public int AfishaId { get; set; }
+        public Afisha Afisha { get; set; }
         //Зал
         public int HallId { get; set; }
         public Hall Hall { get; set; }

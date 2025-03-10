@@ -34,6 +34,11 @@ namespace INTERNET_SHOP.Data
                 .HasForeignKey(c => c.ScheduleId)
                 .OnDelete(DeleteBehavior.Restrict); // Установите ограничитель удаления
 
+            modelBuilder.Entity<Schedule>()
+                .HasOne(c => c.Product) // Один Город связан с многими Cinema
+                .WithMany()
+                .HasForeignKey(c => c.ProductId)
+                .OnDelete(DeleteBehavior.Restrict); // Установите ограничитель удаления
         }
 
         public DbSet<User> User { get; set; } = default!;
@@ -48,6 +53,6 @@ namespace INTERNET_SHOP.Data
         public DbSet<Schedule> Schedule { get; set; } = default!;
         public DbSet<UserAutorize> UserAutorize { get; set; } = default!;
         public DbSet<Role> Role { get; set; } = default!;
-
+        public DbSet<Afisha> Afisha { get; set; } = default!;
     }
 }
