@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public int Number { get; set; }
         public int NumberRow { get; set; }
+        public double PriceCoefficient { get; set; }
         //Связь с билетом
         List<Ticket> Tickets { get; set; } = new();
     }
