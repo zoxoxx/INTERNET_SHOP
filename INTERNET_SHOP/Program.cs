@@ -9,7 +9,7 @@ builder.Services.AddDbContextFactory<INTERNET_SHOPContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("INTERNET_SHOPContext") ?? throw new InvalidOperationException("Connection string 'INTERNET_SHOPContext' not found.")));
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //Authentication and Authorization

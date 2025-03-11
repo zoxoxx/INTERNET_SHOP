@@ -8,6 +8,7 @@
 @using System.Net.Sockets
 @using System.Management
 
+@inject IHttpContextAccessor httpContextAccessor
 @inject IDbContextFactory<INTERNET_SHOP.Data.INTERNET_SHOPContext> Db
 @inject NavigationManager navigationManager
 
@@ -72,7 +73,13 @@
         //Выкачка данных с пользователя при его отсутствии в БД
         string pcName = Environment.UserName;
         using var context = Db.CreateDbContext();
+        var userAgent = httpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();
 
+        if (userAgent is null)
+            return;
+
+        if (userAgent.Contains("Mobile"))
+            return;
         if (await context.User.FirstOrDefaultAsync(u => u.PcName == pcName) is null)
         {
             string os = Environment.OSVersion.ToString();
