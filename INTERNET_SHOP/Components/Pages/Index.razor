@@ -146,6 +146,8 @@
             s => s.AfishaId,
             (af, sc) => new {af, sc})
             .Where( s => s.sc.DateEvent >= dateNow && s.sc.TimeEndEvent > timeNow)
+            .OrderByDescending(s => s.sc.Product.Name)
+            .OrderByDescending(s => s.sc.DateEvent)
             .Select( s => s.af)
             .Take(15)
             .Distinct()
