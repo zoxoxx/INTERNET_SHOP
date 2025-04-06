@@ -11,7 +11,7 @@
 
     <main>
         <div class="top-row px-4">
-            <button class="menu-toggle" onclick="toggleSidebar()">Скрыть меню</button>
+            <button class="menu-toggle" name="hide-button" onclick="toggleSidebar()">Скрыть меню</button>
 
             <AuthorizeView>
                 <NotAuthorized>
@@ -37,10 +37,14 @@
 <script>
     function toggleSidebar() {
         var sidebar = document.getElementById("sidebar");
+        var button = document.querySelector("button[name='hide-button']");
+
         if (sidebar.style.display === "none") {
             sidebar.style.display = "block";
+            button.textContent = "Скрыть меню";
         } else {
             sidebar.style.display = "none";
+            button.textContent = "Показать меню";
         }
     }
 </script>
