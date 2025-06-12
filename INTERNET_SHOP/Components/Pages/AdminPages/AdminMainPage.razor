@@ -1,8 +1,29 @@
 ﻿@page "/admin"
 @attribute [Authorize(Roles = "Admin")]
 
-<h3>AdminMainPage</h3>
+@rendermode InteractiveServer
+
+@inject NavigationManager NM
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<link rel="stylesheet" href="/Styles/AdminMainPage.css">
+
+<div class="admin-container">
+    <h1>Панель администратора кинотеатра</h1>
+    <div class="admin-actions">
+        <button @onclick="OnClickBtnHalls" class="admin-btn">Управление залами</button>
+        <button @onclick="OnClickBtnMovies" class="admin-btn">Добавить фильм</button>
+        <button @onclick="OnClickBtnUsers" class="admin-btn">Пользователи</button>
+        <button @onclick="OnClickBtnSchedule" class="admin-btn">Сеансы</button>
+    </div>
+</div>
 
 @code {
-
+    private void OnClickBtnSchedule() => NM.NavigateTo("");
+    private void OnClickBtnUsers() => NM.NavigateTo("");
+    private void OnClickBtnMovies() => NM.NavigateTo("");
+    private void OnClickBtnHalls() => NM.NavigateTo("");
 }
