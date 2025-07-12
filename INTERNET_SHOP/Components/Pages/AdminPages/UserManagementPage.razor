@@ -1,0 +1,237 @@
+﻿@page "/user-management"
+@rendermode InteractiveServer
+
+@using INTERNET_SHOP.Models.Entities
+@using System.Linq
+
+@inject IDbContextFactory<INTERNET_SHOP.Data.INTERNET_SHOPContext> Db
+
+<div class="user-management">
+    <h2>Управление пользователями</h2>
+
+    @if (isEditing)
+    {
+        <div class="user-form">
+            <h3>@(editUser?.Id == 0 ? "Добавление пользователя" : "Редактирование пользователя")</h3>
+            <div class="form-field">
+                <label>Фамилия:</label>
+                <input type="text" @bind="editUser.Lastname" />
+            </div>
+            <div class="form-field">
+                <label>Имя:</label>
+                <input type="text" @bind="editUser.Name" />
+            </div>
+            <div class="form-field">
+                <label>Отчество:</label>
+                <input type="text" @bind="editUser.Patronymic" />
+            </div>
+            <div class="form-field">
+                <label>Логин:</label>
+                <input type="text" @bind="editUser.Login" />
+            </div>
+            <div class="form-field">
+                <label>Пароль:</label>
+                <input type="text" @bind="editUser.Password" />
+            </div>
+            <div class="form-field">
+                <label>Роль:</label>
+                <select @bind="editUser.RoleId">
+                    @foreach (var role in Roles)
+                    {
+                        <option value="@role.Id">@role.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-buttons">
+                <button class="btn-save" @onclick="SaveUser">Сохранить</button>
+                <button class="btn-cancel" @onclick="CancelEdit">Отмена</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="user-actions">
+            <button class="btn-add" @onclick="AddUser">Добавить пользователя</button>
+        </div>
+
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Фамилия</th>
+                    <th>Имя</th>
+                    <th>Отчество</th>
+                    <th>Логин</th>
+                    <th>Роль</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Users)
+                {
+                    <tr>
+                        <td>@user.Lastname</td>
+                        <td>@user.Name</td>
+                        <td>@user.Patronymic</td>
+                        <td>@user.Login</td>
+                        <td>@user.Role?.Name</td>
+                        <td>
+                            <button class="btn-edit" @onclick="() => EditUser(user.Id)">Редактировать</button>
+                            <button class="btn-delete" @onclick="() => DeleteUser(user.Id)">Удалить</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<style>
+    .user-management {
+    background-color: #333; /* Тёмный фон */
+    color: #ffcc00; /* Желтый текст */
+    padding: 20px;
+    border-radius: 8px;
+    }
+
+    h2, h3 {
+    color: #ffcc00; /* Заголовки желтого цвета */
+    }
+
+    label {
+    color: #ffcc00; /* Метки желтого цвета */
+    }
+
+    .form-field {
+    margin-bottom: 20px; /* Отступ между полями */
+    }
+
+    input, select {
+    background-color: #444; /* Тёмный фон для полей ввода */
+    color: #ffcc00; /* Желтый текст в полях ввода */
+    border: 1px solid #ffcc00; /* Желтая рамка */
+    padding: 5px;
+    width: 100%; /* Занять всю ширину */
+    border-radius: 4px;
+    }
+
+    .form-buttons {
+    margin-top: 10px; /* Отступ между полями и кнопками */
+    }
+
+    button {
+    background-color: #ffcc00; /* Желтый фон кнопок */
+    color: #333; /* Тёмный текст на кнопках */
+    border: none;
+    padding: 10px 15px;
+    margin-right: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    }
+
+    button:hover {
+    opacity: 0.8; /* Эффект при наведении на кнопки */
+    }
+
+    .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    }
+
+    .user-table th, .user-table td {
+    padding: 10px;
+    border: 1px solid #666;
+    text-align: left;
+    }
+
+    .user-table th {
+    background-color: #555; /* Темный фон для заголовков таблицы */
+    color: #ffcc00; /* Желтый текст в заголовках таблицы */
+    }
+</style>
+
+@code {
+    private List<UserAutorize> Users = new();
+    private List<Role> Roles = new();
+    private UserAutorize? editUser;
+    private bool isEditing = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+        LoadRoles();
+    }
+
+    private async Task LoadUsers()
+    {
+        using var context = Db.CreateDbContext();
+        Users = await context.UserAutorize.ToListAsync();
+    }
+
+    private async Task LoadRoles()
+    {
+        using var context = Db.CreateDbContext();
+        Roles = await context.Role.ToListAsync();
+    }
+
+    private void AddUser()
+    {
+        editUser = new UserAutorize();
+        isEditing = true;
+    }
+
+    private void EditUser(int userId)
+    {
+        editUser = Users.FirstOrDefault(u => u.Id == userId);
+        isEditing = true;
+    }
+
+    private void DeleteUser(int userId)
+    {
+        var user = Users.FirstOrDefault(u => u.Id == userId);
+        if (user != null)
+        {
+            Users.Remove(user);
+        }
+    }
+
+    private async Task SaveUser()
+    {
+        bool modeAdd = false;
+        if ((editUser is null ? 0 : editUser.Id) == 0)
+            modeAdd = true;
+
+        try 
+        {
+            using var context = Db.CreateDbContext();
+
+            switch (modeAdd)
+            {
+                case true:
+                    await context.UserAutorize.AddAsync(editUser!);
+                    break;
+
+                default:
+                    context.UserAutorize.Update(editUser!);
+                    break;
+            };
+            await context.SaveChangesAsync();
+
+            LoadUsers();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Возникло исключение при операции с данными над сущностью пользователь - {ex.Message}");
+        }
+        finally
+        {
+            isEditing = false;
+        }
+    }
+
+    private void CancelEdit()
+    {
+        editUser = null;
+        isEditing = false;
+    }
+}
+
